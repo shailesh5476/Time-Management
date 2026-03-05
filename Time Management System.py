@@ -33,10 +33,6 @@ def get_db_connection():
         print(f"Database Connection Error: {err}")
         return None
 
-def hash_password(password):
-    # Simple hashing for demonstration (Use bcrypt in production)
-    return hashlib.sha256(password.encode()).hexdigest()
-
 def init_database():
     """Creates tables and default admin user if they don't exist."""
     conn = get_db_connection()
@@ -69,8 +65,7 @@ def init_database():
         # 3. Insert Default Admin if not exists
         cursor.execute("SELECT * FROM admins WHERE username = 'admin'")
         if not cursor.fetchone():
-            default_pass = hash_password("admin123")
-            cursor.execute("INSERT INTO admins (username, password_hash) VALUES ('admin', %s)", (default_pass,))
+            cursor.execute("INSERT INTO admins (username, password_hash) VALUES ('admin','admin123' %s %s)")
             print("Default admin created: admin / admin123")
         
         conn.commit()
@@ -81,12 +76,12 @@ def init_database():
         print(f"Database Initialization Error: {e}")
         return False
 
-def verify_login(username, password):
+def verify_login(username):
     conn = get_db_connection()
     if conn:
         try:
             cursor = conn.cursor()
-            hashed_pw = hash_password(password)
+            hashed_pw = 'admin123'
             sql = "SELECT * FROM admins WHERE username = %s AND password_hash = %s"
             cursor.execute(sql, (username, hashed_pw))
             user = cursor.fetchone()

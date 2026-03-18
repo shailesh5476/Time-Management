@@ -168,7 +168,7 @@ class LoginWindow:
             messagebox.showwarning("Input Error", "Please enter username and password.")
             return
 
-        if verify_login(username, password):
+        if verify_login(username):
             messagebox.showinfo("Success", "Login Successful!")
             self.clear_root()
             MainApp(self.root)
